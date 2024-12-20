@@ -6,31 +6,11 @@
 /*   By: spike <spike@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 18:40:15 by spike             #+#    #+#             */
-/*   Updated: 2024/12/19 20:48:11 by spike            ###   ########.fr       */
+/*   Updated: 2024/12/20 07:56:30 by spike            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-int philo_and_sticks(t_table *table)
-{
-	int	i;
-
-	table->chopsticks = (int *)malloc(table->nb_philo * sizeof(int));
-	if (!table->chopsticks)
-		return (-1);
-	table->philo = (t_philo *)malloc(table->nb_philo * sizeof(t_philo));
-	if (!table->philo)
-		return (-1);
-	i = 0;
-	while (i < table->nb_philo)
-	{
-		table->chopsticks[i] = i + 1;
-		table->philo[i].name = i + 1;
-		i++;
-	}
-
-}
 
 int	init_table(t_table *table, int ac, char **av)
 {
@@ -49,5 +29,35 @@ int	init_table(t_table *table, int ac, char **av)
 	}
 	if (is_init_correct(table) == 0)
 		return (-1);
+	table->chopsticks = malloc(table->nb_philo * sizeof(pthread_mutex_t));
+	if (!table->chopsticks)
+		return (-1);
+	i = 0;
+	while (i < table->nb_philo)
+	{
+		if (pthread_mutex_init(&table->chopsticks[i], NULL) != 0)
+			return (clear_mutex(table)); // => free et destroy les mutexs déja créés (attention double free) (possible d'utiliser la meme fonction pour tout ?)
+	}
+	return (0);
+}
+
+
+int	init_philo(t_philo **philo, t_table *table)
+{
+	unsigned int	i;
+
+	*philo = (t_philo *)malloc(table->nb_philo * sizeof(t_philo));
+	if (!*philo)
+		return (-1); // attention a tout free en cas de pb
+	i = 0;
+	while (i < table->nb_philo)
+	{
+		(*philo)[i].name = i + 1;
+		(*philo)[i].waiting = 0;
+		(*philo)[i].full = 0;
+		(*philo)[i].dish_eaten = 0;
+		(*philo)[i].table = table;
+		i++;
+	}
 	return (0);
 }
