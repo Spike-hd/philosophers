@@ -25,12 +25,17 @@ void	*eating(void *args)
 	else
 		right = philo->name - 1;
 
-	pthread_mutex_lock(&philo->table->chopsticks[left]);
-	while (1)
+	if (philo->name % 2 == 0)
 	{
-		if (pthread_mutex_lock(&philo->table->chopsticks[right]) == 0)
-			break;
+		pthread_mutex_lock(&philo->table->chopsticks[left]);
+		pthread_mutex_lock(&philo->table->chopsticks[right]);
 	}
+	else
+	{
+		pthread_mutex_lock(&philo->table->chopsticks[right]);
+		pthread_mutex_lock(&philo->table->chopsticks[left]);
+	}
+
 }
 
 int	itadakimasu(t_philo **philo)
