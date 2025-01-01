@@ -33,8 +33,10 @@ typedef struct s_table
 	unsigned int	time_to_eat;
 	unsigned int	time_to_sleep;
 	int				stop;
+	pthread_mutex_t	mtx_write; // à faire
+	pthread_mutex_t	mtx_alive; // à faire
+	int				alive; // à faire
 	unsigned int	max_meal;
-
 }				t_table;
 
 //---------INIT----------------
@@ -50,5 +52,9 @@ int	ft_atoi(const char *str);
 
 // ---------THREAD------------
 int	itadakimasu(t_philo **philo);
+
+// ---------LOCK-UNLOCK--------
+void	sticks_lock(t_philo *philo);
+void	sticks_unlock(t_philo *philo);
 
 #endif
