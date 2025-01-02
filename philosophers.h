@@ -14,18 +14,9 @@
 # define PHILOSOPHERS_H
 
 # include <pthread.h>
+# include <stdlib.h>
 # include <stdio.h>
 # include <sys/time.h>
-
-typedef struct s_philo
-{
-	int				name;
-	pthread_mutex_t	mtx_waiting; // a faire
-	unsigned int	waiting;
-	int				full;
-	unsigned int	dish_eaten;
-	t_table			*table;
-}				t_philo;
 
 typedef struct s_table
 {
@@ -40,6 +31,17 @@ typedef struct s_table
 	int				alive; // à faire
 	unsigned int	max_meal;
 }				t_table;
+
+typedef struct s_philo
+{
+	int				name;
+	pthread_mutex_t	mtx_waiting; // a faire
+	unsigned int	waiting;
+	int				full;
+	unsigned int	dish_eaten;
+	t_table			*table;
+}				t_philo;
+
 
 //---------INIT----------------
 int		init_table(t_table *table, int ac, char **av);
@@ -66,5 +68,11 @@ int		check_death(t_philo *philo);
 // ---------LOCK-UNLOCK--------
 void	sticks_lock(t_philo *philo);
 void	sticks_unlock(t_philo *philo);
+
+// -----------PRINT-------------
+void	print_death(t_philo *philo);
+void	print_think(t_philo *philo);
+void	print_eat(t_philo *philo);
+void	print_sleep(t_philo *philo);
 
 #endif

@@ -15,13 +15,13 @@
 int	is_everyone_alive(t_philo *philo)
 {
 	// Vérifie si la table est "vivante"
-	pthread_mutex_lock(philo->table->mtx_alive);
+	pthread_mutex_lock(&philo->table->mtx_alive);
 	if (philo->table->alive == 0)
 	{
-		pthread_mutex_unlock(philo->table->mtx_alive);
+		pthread_mutex_unlock(&philo->table->mtx_alive);
 		return (0);
 	}
-	pthread_mutex_unlock(philo->table->mtx_alive);
+	pthread_mutex_unlock(&philo->table->mtx_alive);
 	return (1);
 }
 
@@ -49,6 +49,8 @@ int	eating_routine(t_philo *philo, int left, int right, int max_dish)
 
 		// Incrémente le compteur de repas
 		philo->dish_eaten++;
+		if (philo->table->stop == 0)
+			max_dish++;
 	}
 	return (0); // Philosophe a terminé son cycle normal
 }
@@ -105,12 +107,12 @@ void	*monitoring(void *arg)
 		i = 0;
 		while (i < nb_philo)
 		{
-			if (check_death((*philo)[i]) == 1)
+			if (check_death(&(*philo)[i]) == 1)
 			{
-				pthread_mutex_lock((*philo)[i].table->mtx_alive);
+				pthread_mutex_lock(&(*philo)[i].table->mtx_alive);
 				(*philo)[i].table->alive = 0;
-				pthread_mutex_unlock((*philo)[i].table->mtx_alive);
-				print_death((*philo)[i]);
+				pthread_mutex_unlock(&(*philo)[i].table->mtx_alive);
+				print_death(&(*philo)[i]);
 				return (NULL);
 			}
 			i++;

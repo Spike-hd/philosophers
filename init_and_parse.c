@@ -12,32 +12,61 @@
 
 #include "philosophers.h"
 
-int	init_table(t_table *table, int ac, char **av)
+int	setup_table_params(t_table *table, int ac, char **av)
 {
-	unsigned int	i;
-
+	// Lecture et configuration des paramètres de la table
 	table->nb_philo = ft_atoi(av[1]);
 	table->time_to_die = ft_atoi(av[2]);
 	table->time_to_eat = ft_atoi(av[3]);
 	table->time_to_sleep = ft_atoi(av[4]);
+	table->alive = 1;
+
+	// Configuration du nombre maximum de repas si fourni
 	if (ac == 5)
+	{
 		table->stop = 0;
+		table->max_meal = 0; // Aucun repas maximum par défaut
+	}
 	else
 	{
 		table->stop = 1;
 		table->max_meal = ft_atoi(av[5]);
 	}
+
+	// Vérification de la validité des paramètres
 	if (is_init_correct(table) == 0)
 		return (-1);
+	return (0);
+}
+
+int	init_table_resources(t_table *table)
+{
+	int	i;
+
 	table->chopsticks = malloc(table->nb_philo * sizeof(pthread_mutex_t));
 	if (!table->chopsticks)
 		return (-1);
+
 	i = 0;
 	while (i < table->nb_philo)
 	{
 		if (pthread_mutex_init(&table->chopsticks[i], NULL) != 0)
-			return (clear_mutex(table)); // => free et destroy les mutexs déja créés (attention double free) (possible d'utiliser la meme fonction pour tout ?)
+			return (clear_mutex(table)); // Libération des ressources en cas d'erreur
+		i++;
 	}
+	if (pthread_mutex_init(&table->mtx_alive, NULL) != 0)
+		return (clear_mutex(table));
+	if (pthread_mutex_init(&table->mtx_writing, NULL) != 0)
+		return (clear_mutex(table));
+	return (0);
+}
+
+int	init_table(t_table *table, int ac, char **av)
+{
+	if (setup_table_params(table, ac, av) != 0)
+		return (-1);
+	if (init_table_resources(table) != 0)
+		return (-1);
 	return (0);
 }
 
@@ -57,6 +86,8 @@ int	init_philo(t_philo **philo, t_table *table)
 		(*philo)[i].full = 0;
 		(*philo)[i].dish_eaten = 0;
 		(*philo)[i].table = table;
+		if (pthread_mutex_init(&(*philo)[i].mtx_waiting, NULL) != 0)
+			return (clear_mutex_philo(philo));
 		i++;
 	}
 	return (0);
