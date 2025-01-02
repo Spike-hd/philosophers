@@ -27,29 +27,25 @@ int	is_everyone_alive(t_philo *philo)
 
 int	eating_routine(t_philo *philo, int left, int right, int max_dish)
 {
-	int	time;
-
 	while (philo->dish_eaten < max_dish)
 	{
 		// Philosophe commence à réfléchir
-		time = calculate_time();
 		if (is_everyone_alive(philo) == 0)
 			return (-1);
-		print_think(philo, time); // THINK
+		init_waiting(philo);
+		print_think(philo); // THINK
 
 		// Philosophe commence à manger
 		sticks_lock(philo);
-		time = calculate_time();
 		if (is_everyone_alive(philo) == 0)
 			return (-1);
-		print_eat(philo, time); // EAT
+		print_eat(philo); // EAT
 		sticks_unlock(philo);
 
 		// Philosophe dort
-		time = calculate_time();
 		if (is_everyone_alive(philo) == 0)
 			return (-1);
-		print_sleep(philo, time); // SLEEP
+		print_sleep(philo); // SLEEP
 
 		// Incrémente le compteur de repas
 		philo->dish_eaten++;
@@ -113,8 +109,8 @@ void	*monitoring(void *arg)
 			{
 				pthread_mutex_lock((*philo)[i].table->mtx_alive);
 				(*philo)[i].table->alive = 0;
-				print_death(i);
 				pthread_mutex_unlock((*philo)[i].table->mtx_alive);
+				print_death((*philo)[i]);
 				return (NULL);
 			}
 			i++;
@@ -123,27 +119,4 @@ void	*monitoring(void *arg)
 				return (NULL);
 	}
 	return (NULL);
-}
-
-int	itadakimasu(t_philo **philo)
-{
-	pthread_t		*threads;
-	pthread_t		checker;
-	unsigned int	nb_philo;
-	unsigned int	i;
-
-	nb_philo = (*philo)[0].table->nb_philo;
-	threads = (pthread_t *)malloc(nb_philo * sizeof(pthread_t));
-	if (!threads)
-		return (-1);
-
-	if (pthread_create(&checker, NULL, monitoring, (void *)philo) != 0)
-			return (-1);
-	i = 0;
-	while (i < nb_philo)
-	{
-		if (pthread_create(&threads[i], NULL, eating, (void *)&((*philo)[i])) != 0)
-			return (-1); // il faut gérer l'erreur
-	}
-
 }

@@ -15,6 +15,7 @@
 int	error_handle(char *error_msg) // <= il faut penser a tout free
 {
 	printf("%s", error_msg);
+	return (-1);
 }
 
 int	is_init_correct(t_table *table)
@@ -33,4 +34,12 @@ int	is_init_correct(t_table *table)
 			return (0);
 	}
 	return (1);
+}
+
+int error_pthread(int i, pthread_t *threads) // ERREUR ICI PTHREAD_CANCEL
+{
+	while (i > 0)
+		pthread_cancel(threads[--i]);
+	free(threads);
+	return (-1);
 }
