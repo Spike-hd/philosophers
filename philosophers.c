@@ -12,29 +12,73 @@
 
 #include "philosophers.h"
 
+// Fonction pour initialiser les threads des philosophes qui nettoie en cas d'erreur
+int	create_philo_threads(pthread_t *threads, t_philo **philo, int nb_philo)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < nb_philo)
+	{
+		if (pthread_create(&threads[i], NULL, eating, (void *)&((*philo)[i])) != 0)
+		{
+			j = 0;
+			while (j < i)
+			{
+				if (pthread_join(threads[j], NULL) != 0)
+					error_handle("Error during pthread_join\n");
+				j++;
+			}
+			return (-1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+// Fonction pour attendre la fin de tous les threads
+static void join_all_threads(pthread_t checker, pthread_t *threads, unsigned int nb_philo)
+{
+	int	i;
+
+	if (pthread_join(checker, NULL) != 0)
+		error_handle("Error during pthread_join for monitoring thread\n");
+
+	i = 0;
+	while (i < nb_philo)
+	{
+		if (pthread_join(threads[i], NULL) != 0)
+			error_handle("Error during pthread_join for philosopher thread\n");
+		i++;
+	}
+}
+
 int	itadakimasu(t_philo **philo)
 {
 	pthread_t		*threads;
 	pthread_t		checker;
 	unsigned int	nb_philo;
-	unsigned int	i;
 
 	nb_philo = (*philo)[0].table->nb_philo;
 	threads = (pthread_t *)malloc(nb_philo * sizeof(pthread_t));
 	if (!threads)
 		return (-1);
 	if (pthread_create(&checker, NULL, monitoring, (void *)philo) != 0)
-			return (-1);
-	i = 0;
-	while (i < nb_philo)
 	{
-		if (pthread_create(&threads[i], NULL, eating, (void *)&((*philo)[i])) != 0)
-			return (error_pthread(i, threads)); // pb avec le checker maybe géré dans le main ?
+		free(threads);
+		return (-1);
 	}
-	pthread_join(checker, NULL);
-	i = -1;
-	while (++i < nb_philo)
-		pthread_join(threads[i], NULL);
+	if (create_philo_threads(threads, philo, nb_philo) != 0)
+	{
+		pthread_join(checker, NULL); // Attendre le thread checker en cas d'erreur
+		free(threads);
+		return (-1);
+	}
+	// Attente de la fin de tous les threads
+	join_all_threads(checker, threads, nb_philo);
+
+	// Libération des ressources
 	free(threads);
 	return (0);
 }
@@ -50,5 +94,11 @@ int	main(int ac, char **av)
 		return (error_handle("problem with one of the argument\n"));
 	if (init_philo(&philo, &table) == -1)
 		return (error_handle("problem with the allocation of philosophers\n"));
-
+	if (itadakimasu(&philo) == -1)
+	{
+		clear_all(&philo);
+		return (error_handle("failed creating threads\n"));
+	}
+	clear_all(&philo);
+	return (0);
 }

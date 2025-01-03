@@ -36,10 +36,31 @@ int	is_init_correct(t_table *table)
 	return (1);
 }
 
-int error_pthread(int i, pthread_t *threads) // ERREUR ICI PTHREAD_CANCEL
+void	clear_all(t_philo **philo)
 {
-	while (i > 0)
-		pthread_cancel(threads[--i]);
-	free(threads);
-	return (-1);
+	int	i;
+	int	nb_philo;
+	t_table	*table;
+
+	if (!philo || !(*philo))
+		return;
+
+	// Sauvegarder le pointeur vers la table avant de libérer `*philo`
+	i = 0;
+	table = (*philo)[0].table;
+	nb_philo = table->nb_philo;
+	while (i < nb_philo)
+		pthread_mutex_destroy(&((*philo)[i++].mtx_waiting));
+	free (*philo);
+
+	pthread_mutex_destroy(&((*philo)[0].table->mtx_alive));
+	pthread_mutex_destroy(&((*philo)[0].table->mtx_writing));
+
+	if (table->chopsticks)
+	{
+		i = 0;
+		while (i < nb_philo)
+			pthread_mutex_destroy(&((*philo)[0].table->chopsticks[i++]));
+		free(table->chopsticks);
+	}
 }

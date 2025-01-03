@@ -20,20 +20,16 @@ int	setup_table_params(t_table *table, int ac, char **av)
 	table->time_to_eat = ft_atoi(av[3]);
 	table->time_to_sleep = ft_atoi(av[4]);
 	table->alive = 1;
-
-	// Configuration du nombre maximum de repas si fourni
 	if (ac == 5)
 	{
 		table->stop = 0;
-		table->max_meal = 0; // Aucun repas maximum par défaut
+		table->max_meal = 0;
 	}
 	else
 	{
 		table->stop = 1;
 		table->max_meal = ft_atoi(av[5]);
 	}
-
-	// Vérification de la validité des paramètres
 	if (is_init_correct(table) == 0)
 		return (-1);
 	return (0);

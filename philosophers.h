@@ -50,6 +50,7 @@ int		init_philo(t_philo **philo, t_table *table);
 // --------ERROR---------------
 int		error_handle(char *error_msg);
 int		is_init_correct(t_table *table);
+void	clear_all(t_philo **philo);
 
 // --------UTILS---------------
 int		ft_atoi(const char *str);
