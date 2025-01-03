@@ -47,13 +47,13 @@ int	init_table_resources(t_table *table)
 	while (i < table->nb_philo)
 	{
 		if (pthread_mutex_init(&table->chopsticks[i], NULL) != 0)
-			return (clear_mutex(table)); // Libération des ressources en cas d'erreur
+			return (clear_all(NULL)); // Libération des ressources en cas d'erreur
 		i++;
 	}
 	if (pthread_mutex_init(&table->mtx_alive, NULL) != 0)
-		return (clear_mutex(table));
+		return (clear_all(NULL));
 	if (pthread_mutex_init(&table->mtx_writing, NULL) != 0)
-		return (clear_mutex(table));
+		return (clear_all(NULL));
 	return (0);
 }
 
@@ -69,7 +69,7 @@ int	init_table(t_table *table, int ac, char **av)
 
 int	init_philo(t_philo **philo, t_table *table)
 {
-	unsigned int	i;
+	int	i;
 
 	*philo = (t_philo *)malloc(table->nb_philo * sizeof(t_philo));
 	if (!*philo)
@@ -83,7 +83,7 @@ int	init_philo(t_philo **philo, t_table *table)
 		(*philo)[i].dish_eaten = 0;
 		(*philo)[i].table = table;
 		if (pthread_mutex_init(&(*philo)[i].mtx_waiting, NULL) != 0)
-			return (clear_mutex_philo(philo));
+			return (clear_all(philo));
 		i++;
 	}
 	return (0);

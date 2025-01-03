@@ -38,7 +38,7 @@ int	create_philo_threads(pthread_t *threads, t_philo **philo, int nb_philo)
 }
 
 // Fonction pour attendre la fin de tous les threads
-static void join_all_threads(pthread_t checker, pthread_t *threads, unsigned int nb_philo)
+static void join_all_threads(pthread_t checker, pthread_t *threads, int nb_philo)
 {
 	int	i;
 

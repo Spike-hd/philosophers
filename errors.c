@@ -36,14 +36,14 @@ int	is_init_correct(t_table *table)
 	return (1);
 }
 
-void	clear_all(t_philo **philo)
+int	clear_all(t_philo **philo)
 {
 	int	i;
 	int	nb_philo;
 	t_table	*table;
 
 	if (!philo || !(*philo))
-		return;
+		return (0);
 
 	// Sauvegarder le pointeur vers la table avant de libérer `*philo`
 	i = 0;
@@ -63,4 +63,5 @@ void	clear_all(t_philo **philo)
 			pthread_mutex_destroy(&((*philo)[0].table->chopsticks[i++]));
 		free(table->chopsticks);
 	}
+	return (0);
 }

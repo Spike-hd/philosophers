@@ -20,16 +20,16 @@
 
 typedef struct s_table
 {
-	unsigned int	nb_philo;
+	int				nb_philo;
 	pthread_mutex_t	*chopsticks;
-	unsigned int	time_to_die;
-	unsigned int	time_to_eat;
-	unsigned int	time_to_sleep;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
 	int				stop;
 	pthread_mutex_t	mtx_writing; // à faire
 	pthread_mutex_t	mtx_alive; // à faire
 	int				alive; // à faire
-	unsigned int	max_meal;
+	int				max_meal;
 }				t_table;
 
 typedef struct s_philo
@@ -38,7 +38,7 @@ typedef struct s_philo
 	pthread_mutex_t	mtx_waiting; // a faire
 	unsigned int	waiting;
 	int				full;
-	unsigned int	dish_eaten;
+	int				dish_eaten;
 	t_table			*table;
 }				t_philo;
 
@@ -50,7 +50,7 @@ int		init_philo(t_philo **philo, t_table *table);
 // --------ERROR---------------
 int		error_handle(char *error_msg);
 int		is_init_correct(t_table *table);
-void	clear_all(t_philo **philo);
+int		clear_all(t_philo **philo);
 
 // --------UTILS---------------
 int		ft_atoi(const char *str);

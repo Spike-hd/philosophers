@@ -18,6 +18,13 @@ static int	ft_isspace(int c)
 		|| c == '\v' || c == '\f' || c == '\r');
 }
 
+int	ft_isdigit(int c)
+{
+	if (c > 47 && c < 58)
+		return (1);
+	return (0);
+}
+
 int	ft_atoi(const char *str)
 {
 	int		result;

@@ -25,7 +25,7 @@ int	is_everyone_alive(t_philo *philo)
 	return (1);
 }
 
-int	eating_routine(t_philo *philo, int left, int right, int max_dish)
+int	eating_routine(t_philo *philo, int max_dish)
 {
 	while (philo->dish_eaten < max_dish)
 	{
@@ -58,22 +58,15 @@ int	eating_routine(t_philo *philo, int left, int right, int max_dish)
 void	*eating(void *args)
 {
 	t_philo	*philo;
-	int		left;
-	int		right;
 	int		max_dish;
 
 	philo = (t_philo *)args;
-	left = philo->name;
-	if (philo->name == 1)
-		right = philo->table->nb_philo;
-	else
-		right = philo->name - 1;
-
 	if (philo->table->stop == 0)
 		max_dish = philo->dish_eaten + 1;
 	else
 		max_dish = philo->table->max_meal;
-	eating_routine(philo, left, right, max_dish);
+	eating_routine(philo, max_dish);
+	return (NULL);
 }
 
 int	is_everyone_full(t_philo **philo, int nb_philo)
