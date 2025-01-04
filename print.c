@@ -32,9 +32,7 @@ void	print_think(t_philo *philo)
 	time = calculate_time();
 	start = philo->table->start;
 	pthread_mutex_lock(&philo->table->mtx_writing);
-	printf("%ld %d is thinking\n", time - start, philo->name);
-	printf("%d %d SINCE LAST MEAL\n", test_waiting(philo), philo->name);
-	printf("%ld calculate time\n", calculate_time());
+	printf("%ld %d is thinking\n", time - start, philo->name);;
 	pthread_mutex_unlock(&philo->table->mtx_writing);
 }
 
