@@ -12,21 +12,33 @@
 
 #include "philosophers.h"
 
-void	sticks_lock(t_philo *philo)
+int	sticks_lock(t_philo *philo)
 {
-	int left = philo->name - 1;
-	int right = (philo->name % philo->table->nb_philo);
+	int		left;
+	int		right;
 
+	left = philo->name - 1;
+	right = (philo->name % philo->table->nb_philo);
+	if (philo->table->nb_philo == 1)
+	{
+		print_fork(philo);
+		return (-1);
+	}
 	if (philo->name % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->table->chopsticks[left]);
+		print_fork(philo);
 		pthread_mutex_lock(&philo->table->chopsticks[right]);
+		print_fork(philo);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->table->chopsticks[right]);
+		print_fork(philo);
 		pthread_mutex_lock(&philo->table->chopsticks[left]);
+		print_fork(philo);
 	}
+	return (0);
 }
 
 void	sticks_unlock(t_philo *philo)

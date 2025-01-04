@@ -27,30 +27,36 @@ int	is_everyone_alive(t_philo *philo)
 
 int	eating_routine(t_philo *philo, int max_dish)
 {
+	if (is_everyone_alive(philo) == 0)
+			return (-1);
 	while (philo->dish_eaten < max_dish)
 	{
 		// Philosophe commence à réfléchir
 		if (is_everyone_alive(philo) == 0)
 			return (-1);
-		init_waiting(philo);
+		// init_waiting(philo);
 		print_think(philo); // THINK
 
 		// Philosophe commence à manger
-		sticks_lock(philo);
 		if (is_everyone_alive(philo) == 0)
+			return (-1);
+		if (sticks_lock(philo) == -1)
 			return (-1);
 		print_eat(philo); // EAT
 		sticks_unlock(philo);
+		ft_usleep(philo->table->time_to_eat);
+		init_waiting(philo);
 
 		// Philosophe dort
 		if (is_everyone_alive(philo) == 0)
 			return (-1);
 		print_sleep(philo); // SLEEP
+		ft_usleep(philo->table->time_to_sleep);
 
-		// Incrémente le compteur de repas
-		philo->dish_eaten++;
-		if (philo->table->stop == 0)
-			max_dish++;
+		pthread_mutex_lock(&philo->mtx_dish);
+		if (philo->table->stop == 1)
+			philo->dish_eaten++;
+		pthread_mutex_unlock(&philo->mtx_dish);
 	}
 	return (0); // Philosophe a terminé son cycle normal
 }
@@ -78,13 +84,17 @@ int	is_everyone_full(t_philo **philo, int nb_philo)
 		return (0);
 	while (j < nb_philo)
 	{
+		pthread_mutex_lock(&(*philo)[j].mtx_dish);
 		if ((*philo)[j].dish_eaten < (*philo)[j].table->max_meal)
-			break;
+		{
+			pthread_mutex_unlock(&(*philo)[j].mtx_dish);
+			return (0);
+		}
+		pthread_mutex_unlock(&(*philo)[j].mtx_dish);
 		j++;
 	}
-	if (j == nb_philo)
-		return (1);
-	return (0);
+	printf("Everyone ate %d times !", (*philo)[0].table->max_meal);
+	return (1);
 }
 
 void	*monitoring(void *arg)

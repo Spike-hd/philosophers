@@ -36,32 +36,37 @@ int	is_init_correct(t_table *table)
 	return (1);
 }
 
-int	clear_all(t_philo **philo)
+int clear_all(t_philo **philo)
 {
-	int	i;
-	int	nb_philo;
+	int		i;
 	t_table	*table;
 
 	if (!philo || !(*philo))
 		return (0);
 
-	// Sauvegarder le pointeur vers la table avant de libérer `*philo`
-	i = 0;
 	table = (*philo)[0].table;
-	nb_philo = table->nb_philo;
-	while (i < nb_philo)
-		pthread_mutex_destroy(&((*philo)[i++].mtx_waiting));
-	free (*philo);
 
-	pthread_mutex_destroy(&((*philo)[0].table->mtx_alive));
-	pthread_mutex_destroy(&((*philo)[0].table->mtx_writing));
-
+	// Libérer les ressources de la table
 	if (table->chopsticks)
 	{
 		i = 0;
-		while (i < nb_philo)
-			pthread_mutex_destroy(&((*philo)[0].table->chopsticks[i++]));
+		while (i < table->nb_philo)
+			pthread_mutex_destroy(&table->chopsticks[i++]);
 		free(table->chopsticks);
 	}
+	pthread_mutex_destroy(&table->mtx_alive);
+	pthread_mutex_destroy(&table->mtx_writing);
+
+	// Libérer les philosophes et leurs ressources
+	i = -1;
+	while (++i < table->nb_philo)
+	{
+		pthread_mutex_destroy(&(*philo)[i].mtx_waiting);
+		pthread_mutex_destroy(&(*philo)[i].mtx_dish);
+
+	}
+	free(*philo);
+
 	return (0);
 }
+

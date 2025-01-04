@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-int	setup_table_params(t_table *table, int ac, char **av)
+int	setup_table_params(t_table *table, int ac, char **av, unsigned long start)
 {
 	// Lecture et configuration des paramètres de la table
 	table->nb_philo = ft_atoi(av[1]);
@@ -20,6 +20,8 @@ int	setup_table_params(t_table *table, int ac, char **av)
 	table->time_to_eat = ft_atoi(av[3]);
 	table->time_to_sleep = ft_atoi(av[4]);
 	table->alive = 1;
+	table->full = 0;
+	table->start = start;
 	if (ac == 5)
 	{
 		table->stop = 0;
@@ -57,9 +59,9 @@ int	init_table_resources(t_table *table)
 	return (0);
 }
 
-int	init_table(t_table *table, int ac, char **av)
+int	init_table(t_table *table, int ac, char **av, unsigned long start)
 {
-	if (setup_table_params(table, ac, av) != 0)
+	if (setup_table_params(table, ac, av, start) != 0)
 		return (-1);
 	if (init_table_resources(table) != 0)
 		return (-1);
@@ -78,12 +80,13 @@ int	init_philo(t_philo **philo, t_table *table)
 	while (i < table->nb_philo)
 	{
 		(*philo)[i].name = i + 1;
-		(*philo)[i].waiting = 0;
-		(*philo)[i].full = 0;
 		(*philo)[i].dish_eaten = 0;
 		(*philo)[i].table = table;
 		if (pthread_mutex_init(&(*philo)[i].mtx_waiting, NULL) != 0)
 			return (clear_all(philo));
+		if (pthread_mutex_init(&(*philo)[i].mtx_dish, NULL) != 0)
+			return (clear_all(philo));
+		init_waiting(&(*philo)[i]);
 		i++;
 	}
 	return (0);
