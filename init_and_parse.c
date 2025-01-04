@@ -12,15 +12,20 @@
 
 #include "philosophers.h"
 
+void	init_waiting(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->mtx_waiting);
+	philo->waiting = calculate_time();
+	pthread_mutex_unlock(&philo->mtx_waiting);
+}
+
 int	setup_table_params(t_table *table, int ac, char **av, unsigned long start)
 {
-	// Lecture et configuration des paramètres de la table
 	table->nb_philo = ft_atoi(av[1]);
 	table->time_to_die = ft_atoi(av[2]);
 	table->time_to_eat = ft_atoi(av[3]);
 	table->time_to_sleep = ft_atoi(av[4]);
 	table->alive = 1;
-	table->full = 0;
 	table->start = start;
 	if (ac == 5)
 	{
@@ -49,7 +54,7 @@ int	init_table_resources(t_table *table)
 	while (i < table->nb_philo)
 	{
 		if (pthread_mutex_init(&table->chopsticks[i], NULL) != 0)
-			return (clear_all(NULL)); // Libération des ressources en cas d'erreur
+			return (clear_all(NULL));
 		i++;
 	}
 	if (pthread_mutex_init(&table->mtx_alive, NULL) != 0)
@@ -75,7 +80,7 @@ int	init_philo(t_philo **philo, t_table *table)
 
 	*philo = (t_philo *)malloc(table->nb_philo * sizeof(t_philo));
 	if (!*philo)
-		return (-1); // attention a tout free en cas de pb
+		return (-1);
 	i = 0;
 	while (i < table->nb_philo)
 	{

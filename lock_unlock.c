@@ -43,9 +43,11 @@ int	sticks_lock(t_philo *philo)
 
 void	sticks_unlock(t_philo *philo)
 {
-	int left = philo->name - 1;
-	int right = (philo->name % philo->table->nb_philo);
+	int	left;
+	int	right;
 
+	left = philo->name - 1;
+	right = (philo->name % philo->table->nb_philo);
 	pthread_mutex_unlock(&philo->table->chopsticks[right]);
 	pthread_mutex_unlock(&philo->table->chopsticks[left]);
 }

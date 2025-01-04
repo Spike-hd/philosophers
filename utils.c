@@ -27,11 +27,9 @@ int	ft_isdigit(int c)
 
 int	ft_atoi(const char *str)
 {
-	int		result;
-	int		sign;
-	int		i;
+	unsigned long	result;
+	int				i;
 
-	sign = 1;
 	i = 0;
 	result = 0;
 	while (ft_isspace(str[i]))
@@ -47,5 +45,7 @@ int	ft_atoi(const char *str)
 		result = (result * 10) + str[i] - '0';
 		i++;
 	}
-	return (result * sign);
+	if (result >= 2147483647)
+		return (-1);
+	return ((int)result);
 }

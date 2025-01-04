@@ -12,8 +12,8 @@
 
 #include "philosophers.h"
 
-// Fonction pour initialiser les threads des philosophes qui nettoie en cas d'erreur
-int	create_philo_threads(pthread_t *threads, t_philo **philo, int nb_philo)
+// Fonction pour init les threads des philosophes qui nettoie en cas d'erreur
+int	create_philo_threads(pthread_t *th, t_philo **philo, int nb_philo)
 {
 	int	i;
 	int	j;
@@ -21,12 +21,12 @@ int	create_philo_threads(pthread_t *threads, t_philo **philo, int nb_philo)
 	i = 0;
 	while (i < nb_philo)
 	{
-		if (pthread_create(&threads[i], NULL, eating, (void *)&((*philo)[i])) != 0)
+		if (pthread_create(&th[i], NULL, eating, (void *)&((*philo)[i])) != 0)
 		{
 			j = 0;
 			while (j < i)
 			{
-				if (pthread_join(threads[j], NULL) != 0)
+				if (pthread_join(th[j], NULL) != 0)
 					error_handle("Error during pthread_join\n");
 				j++;
 			}
@@ -38,7 +38,7 @@ int	create_philo_threads(pthread_t *threads, t_philo **philo, int nb_philo)
 }
 
 // Fonction pour attendre la fin de tous les threads
-static void join_all_threads(pthread_t checker, pthread_t *threads, int nb_philo)
+void	join_all_threads(pthread_t checker, pthread_t *threads, int nb_philo)
 {
 	int	i;
 
@@ -71,22 +71,19 @@ int	itadakimasu(t_philo **philo)
 	}
 	if (create_philo_threads(threads, philo, nb_philo) != 0)
 	{
-		pthread_join(checker, NULL); // Attendre le thread checker en cas d'erreur
+		pthread_join(checker, NULL);
 		free(threads);
 		return (-1);
 	}
-	// Attente de la fin de tous les threads
 	join_all_threads(checker, threads, nb_philo);
-
-	// Libération des ressources
 	free(threads);
 	return (0);
 }
 
 int	main(int ac, char **av)
 {
-	t_philo	*philo;
-	t_table	table;
+	t_philo			*philo;
+	t_table			table;
 	unsigned long	start;
 
 	start = calculate_time();

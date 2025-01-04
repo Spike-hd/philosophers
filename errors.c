@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-int	error_handle(char *error_msg) // <= il faut penser a tout free
+int	error_handle(char *error_msg)
 {
 	printf("%s", error_msg);
 	return (-1);
@@ -36,17 +36,14 @@ int	is_init_correct(t_table *table)
 	return (1);
 }
 
-int clear_all(t_philo **philo)
+int	clear_all(t_philo **philo)
 {
 	int		i;
 	t_table	*table;
 
 	if (!philo || !(*philo))
 		return (0);
-
 	table = (*philo)[0].table;
-
-	// Libérer les ressources de la table
 	if (table->chopsticks)
 	{
 		i = 0;
@@ -56,8 +53,6 @@ int clear_all(t_philo **philo)
 	}
 	pthread_mutex_destroy(&table->mtx_alive);
 	pthread_mutex_destroy(&table->mtx_writing);
-
-	// Libérer les philosophes et leurs ressources
 	i = -1;
 	while (++i < table->nb_philo)
 	{
@@ -66,7 +61,6 @@ int clear_all(t_philo **philo)
 
 	}
 	free(*philo);
-
 	return (0);
 }
 

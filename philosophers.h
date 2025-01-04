@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <limits.h>
 
 typedef struct s_table
 {
@@ -30,7 +31,6 @@ typedef struct s_table
 	pthread_mutex_t	mtx_writing;
 	pthread_mutex_t	mtx_alive;
 	int				alive;
-	int				full;
 	unsigned long	start;
 	int				max_meal;
 }				t_table;
