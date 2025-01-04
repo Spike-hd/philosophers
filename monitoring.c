@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spike <spike@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:07:31 by spike             #+#    #+#             */
-/*   Updated: 2025/01/04 15:32:49 by spike            ###   ########.fr       */
+/*   Updated: 2025/01/04 17:07:48 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ void	*monitoring(void *arg)
 	nb_philo = (*philo)[0].table->nb_philo;
 	while (1)
 	{
-		i = 0;
-		while (i < nb_philo)
+		i = -1;
+		while (++i < nb_philo)
 		{
 			if (check_death(&(*philo)[i]) == 1)
 			{
@@ -80,11 +80,10 @@ void	*monitoring(void *arg)
 				print_death(&(*philo)[i]);
 				return (NULL);
 			}
-			i++;
 		}
 		if (is_everyone_full(philo, nb_philo) == 1)
 			return (NULL);
-		ft_usleep(3);
+		ft_usleep(5);
 	}
 	return (NULL);
 }

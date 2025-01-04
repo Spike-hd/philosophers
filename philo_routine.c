@@ -26,8 +26,6 @@ int	is_everyone_alive(t_philo *philo)
 
 int	eating_routine(t_philo *philo, int max_dish)
 {
-	if (is_everyone_alive(philo) == 0)
-		return (-1);
 	while (philo->dish_eaten < max_dish)
 	{
 		// Philosophe commence à réfléchir
@@ -36,18 +34,15 @@ int	eating_routine(t_philo *philo, int max_dish)
 		print_think(philo);
 
 		// Philosophe commence à manger
-		if (is_everyone_alive(philo) == 0)
-			return (-1);
 		if (sticks_lock(philo) == -1)
-			return (-1);
+				return (-1);
+		init_waiting(philo);
 		print_eat(philo);
 		ft_usleep(philo->table->time_to_eat);
 		sticks_unlock(philo);
 		init_waiting(philo);
 
 		// Philosophe dort
-		if (is_everyone_alive(philo) == 0)
-			return (-1);
 		print_sleep(philo);
 		ft_usleep(philo->table->time_to_sleep);
 

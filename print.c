@@ -32,7 +32,10 @@ void	print_think(t_philo *philo)
 	time = calculate_time();
 	start = philo->table->start;
 	pthread_mutex_lock(&philo->table->mtx_writing);
-	printf("%ld Philo %d is thinking\n", time - start, philo->name);
+	pthread_mutex_lock(&philo->table->mtx_alive);
+	if (philo->table->alive == 1)
+		printf("%ld Philo %d is thinking\n", time - start, philo->name);
+	pthread_mutex_unlock(&philo->table->mtx_alive);
 	pthread_mutex_unlock(&philo->table->mtx_writing);
 }
 
@@ -44,7 +47,14 @@ void	print_fork(t_philo *philo)
 	time = calculate_time();
 	start = philo->table->start;
 	pthread_mutex_lock(&philo->table->mtx_writing);
-	printf("%ld Philo %d has taken a fork\n", time - start, philo->name);
+	pthread_mutex_lock(&philo->table->mtx_alive);
+	if (philo->table->alive == 1)
+	{
+		printf("%ld Philo %d has taken a fork\n", time - start, philo->name);
+		if (philo->table->nb_philo > 1)
+			printf("%ld Philo %d has taken a fork\n", time - start, philo->name);
+	}
+	pthread_mutex_unlock(&philo->table->mtx_alive);
 	pthread_mutex_unlock(&philo->table->mtx_writing);
 }
 
@@ -56,7 +66,10 @@ void	print_eat(t_philo *philo)
 	time = calculate_time();
 	start = philo->table->start;
 	pthread_mutex_lock(&philo->table->mtx_writing);
-	printf("%ld Philo %d is eating\n", time - start, philo->name);
+	pthread_mutex_lock(&philo->table->mtx_alive);
+	if (philo->table->alive == 1)
+		printf("%ld Philo %d is eating\n", time - start, philo->name);
+	pthread_mutex_unlock(&philo->table->mtx_alive);
 	pthread_mutex_unlock(&philo->table->mtx_writing);
 }
 
@@ -68,6 +81,9 @@ void	print_sleep(t_philo *philo)
 	time = calculate_time();
 	start = philo->table->start;
 	pthread_mutex_lock(&philo->table->mtx_writing);
-	printf("%ld Philo %d is sleeping\n", time - start, philo->name);
+	pthread_mutex_lock(&philo->table->mtx_alive);
+	if (philo->table->alive == 1)
+		printf("%ld Philo %d is sleeping\n", time - start, philo->name);
+	pthread_mutex_unlock(&philo->table->mtx_alive);
 	pthread_mutex_unlock(&philo->table->mtx_writing);
 }

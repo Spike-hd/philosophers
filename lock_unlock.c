@@ -27,14 +27,14 @@ int	sticks_lock(t_philo *philo)
 	if (philo->name % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->table->chopsticks[left]);
-		print_fork(philo);
+		//print_fork(philo);
 		pthread_mutex_lock(&philo->table->chopsticks[right]);
 		print_fork(philo);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->table->chopsticks[right]);
-		print_fork(philo);
+		//print_fork(philo);
 		pthread_mutex_lock(&philo->table->chopsticks[left]);
 		print_fork(philo);
 	}
