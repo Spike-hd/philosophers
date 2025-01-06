@@ -10,30 +10,40 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOS_BONUS_H
-# define PHILOSO_BONUS_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <stdlib.h>
 # include <stdio.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <semaphore.h>
+# include <fcntl.h>
 
 typedef struct s_table
 {
 	int				nb_philo;
+	int				*nb_pid;
+	sem_t			*sem_forks;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				stop;
-	int				alive;
-	unsigned long	start;
 	int				max_meal;
+	sem_t			sem_alive;
+	sem_t			full;
+	sem_t			sem_write;
+	unsigned long	start;
 }				t_table;
 
 typedef struct s_philo
 {
 	int				name;
-	unsigned long	waiting;
+	sem_t			sem_wait;
+	unsigned long	last_meal;
+	sem_t			sem_dish;
 	int				dish_eaten;
 	t_table			*table;
 }				t_philo;
+
+#endif
