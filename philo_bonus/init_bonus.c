@@ -14,9 +14,9 @@
 
 void	init_waiting(t_philo *philo)
 {
-	sem_wait(&philo->sem_wait);
+	sem_wait(philo->sem_wait);
 	philo->last_meal = calculate_time();
-	sem_post(&philo->sem_wait);
+	sem_post(philo->sem_wait);
 }
 
 int	setup_table_params(t_table *table, int ac, char **av, unsigned long start)
@@ -47,7 +47,7 @@ int	init_table_resources(t_table *table)
 	if (table->nb_pid == NULL)
 		return (-1);
 	table->sem_forks = sem_open("/forks", O_CREAT, 0644, table->nb_philo);
-	table->sem_done = sem_open("/done", O_CREAT | O_EXCL, 0644, 0);
+	table->sem_done = sem_open("/done", O_CREAT, 0644, 0);
 	if (table->sem_done == SEM_FAILED || table->sem_forks == SEM_FAILED)
 	{
 		close_table_sem(table);
@@ -67,16 +67,13 @@ int	init_table(t_table *table, int ac, char **av, unsigned long start)
 
 int	init_philo(t_philo *philo, t_table *table)
 {
-	int	i;
-
-	i = 0;
 	philo->name = 0;
 	philo->dish_eaten = 0;
 	philo->table = table;
-	init_waiting(&philo);
+	init_waiting(philo);
 	philo->sem_wait = sem_open("/wait", O_CREAT, 0644, 1);
-	philo->sem_dish = sem_open("/dish", O_CREAT | O_EXCL, 0644, 1);
-	philo->sem_write = sem_open("/write", O_CREAT | O_EXCL, 0644, 1);
+	philo->sem_dish = sem_open("/dish", O_CREAT, 0644, 1);
+	philo->sem_write = sem_open("/write", O_CREAT, 0644, 1);
 	if (philo->sem_wait == SEM_FAILED || philo->sem_dish == SEM_FAILED || philo->sem_write == SEM_FAILED)
 	{
 		close_philo_sem(philo);

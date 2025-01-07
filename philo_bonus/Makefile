@@ -1,7 +1,7 @@
 NAME		= philo_bonus
 
 CC			= gcc
-CFLAGS		= -Werror -Wextra -Wall
+CFLAGS		= -Werror -Wextra -Wall -g
 
 SRC			= philo_bonus.c errors_bonus.c init_bonus.c process_routine.c monitoring_bonus.c print_bonus.c time_bonus.c utils_bonus.c
 OBJ			= $(SRC:.c=.o)

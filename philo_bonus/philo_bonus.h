@@ -20,6 +20,7 @@
 # include <unistd.h>
 # include <semaphore.h>
 # include <fcntl.h>
+# include <signal.h>
 
 typedef struct s_table
 {
@@ -38,6 +39,7 @@ typedef struct s_table
 typedef struct s_philo
 {
 	int				name;
+	pthread_t		*thread;
 	sem_t			*sem_wait;
 	unsigned long	last_meal;
 	sem_t			*sem_dish;
@@ -49,8 +51,9 @@ typedef struct s_philo
 
 // --------------INIT------------------
 int		init_table(t_table *table, int ac, char **av, unsigned long start);
-int		init_philo(t_philo **philo, t_table *table);
+int		init_philo(t_philo *philo, t_table *table);
 void	init_waiting(t_philo *philo);
+int		ft_atoi(const char *str);
 
 // --------------ERROR------------------
 int		error_handle(char *error_msg);
@@ -60,7 +63,18 @@ void	close_philo_sem(t_philo *philo);
 void	clear_all(t_philo *philo);
 
 // --------------SIMULATION------------------
-void	start_simulation(t_philo *philo, int i);
+int		start_simulation(t_philo *philo, int i);
 void	*monitoring(void *arg);
+
+// -----------PRINT-------------
+void	print_think(t_philo *philo);
+void	print_fork(t_philo *philo);
+void	print_eat(t_philo *philo);
+void	print_sleep(t_philo *philo);
+
+// -----------TIME-------------
+unsigned long	calculate_time(void);
+void			init_waiting(t_philo *philo);
+void			ft_usleep(unsigned long time_in_ms);
 
 #endif

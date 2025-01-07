@@ -16,10 +16,8 @@ int	set_simulation(t_philo *philo, int nb_philo)
 {
 	int		i;
 	pid_t	pid;
-	int		trigger;
 
 	i = 0;
-	trigger = 0;
 	while (i < nb_philo)
 	{
 		pid = fork();
@@ -28,9 +26,6 @@ int	set_simulation(t_philo *philo, int nb_philo)
 		if (pid == 0)
 		{
 			start_simulation(philo, i + 1);
-			trigger++; // si le philo sort de la simulation cest qu'il a fini de manger il active donc un trigger avant d'exit
-			if (trigger == nb_philo)
-				sem_post(philo->table->sem_done);
 			exit(0);
 		}
 		else
@@ -41,14 +36,12 @@ int	set_simulation(t_philo *philo, int nb_philo)
 	i = -1;
 	while (++i < nb_philo)
 		kill(philo->table->nb_pid[i], SIGKILL);
-
-
 	return 0;
 }
 
 int	main(int ac, char **av)
 {
-	t_philo			*philo;
+	t_philo			philo;
 	t_table			table;
 	unsigned long	start;
 
@@ -57,9 +50,9 @@ int	main(int ac, char **av)
 		return (error_handle("wrong nb of args\n"));
 	if (init_table(&table, ac, av, start) == -1)
 		return (error_handle("problem with one of the argument\n"));
-	if (init_philo(philo, &table) == -1)
+	if (init_philo(&philo, &table) == -1)
 		return (error_handle("problem with the allocation of philosophers\n"));
-	if (set_simulation(philo, table.nb_philo) == -1)
+	if (set_simulation(&philo, table.nb_philo) == -1)
 		return (error_handle("problem with the simulation\n"));
 	clear_all(&philo);
 	return (0);
