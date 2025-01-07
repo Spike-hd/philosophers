@@ -16,8 +16,10 @@ int	set_simulation(t_philo *philo, int nb_philo)
 {
 	int		i;
 	pid_t	pid;
+	int		trigger;
 
 	i = 0;
+	trigger = 0;
 	pid = fork();
 	while (i < nb_philo)
 	{
@@ -27,15 +29,23 @@ int	set_simulation(t_philo *philo, int nb_philo)
 		if (pid == 0)
 		{
 			start_simulation(philo, i + 1);
+			trigger++; // si le philo sort de la simulation cest qu'il a fini de manger il active donc un trigger avant d'exit
+			if (trigger == nb_philo)
+				sem_post(philo->table->sem_done);
 			exit(0);
 		}
 		else
 			philo->table->nb_pid[i] = pid;
 		i++;
 	}
-	sem_wait(philo->table->sem_alive); // wait until one process dies
-		// kill all child process
-	}
+	sem_wait(philo->table->sem_done);
+	i = -1;
+	while (++i < nb_philo)
+		kill(philo->table->nb_pid[i], SIGKILL);
+
+	close_all(philo);
+    return 0;
+}
 
 }
 

@@ -6,7 +6,7 @@
 /*   By: spike <spike@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:12:50 by spike             #+#    #+#             */
-/*   Updated: 2025/01/06 21:13:58 by spike            ###   ########.fr       */
+/*   Updated: 2025/01/07 01:10:01 by spike            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	check_death(t_philo *philo)
 {
 	unsigned long	time_now;
 	unsigned long	last_meal;
+	unsigned long	start;
 
 	time_now = calculate_time();
 	sem_wait(&philo->sem_dish);
@@ -23,10 +24,15 @@ void	check_death(t_philo *philo)
 	sem_post(&philo->sem_dish);
 
 	if (time_now - last_meal > (unsigned long)philo->table->time_to_die)
-		sem_post(&philo->table->sem_alive);
+	{
+		start = philo->table->start;
+		sem_wait(philo->sem_write);
+		printf("%ld Philo %d died\n", time_now - start, philo->name);
+		sem_post(&philo->table->sem_done);
+	}
 }
 
-int	is_philo_full(t_philo *philo) // PB JE NE PEUX SAVOIR QUE SI UN PHILO EST FULL
+int	is_philo_full(t_philo *philo)
 {
 	if (philo->table->stop == 0)
 		return (0);

@@ -30,9 +30,7 @@ typedef struct s_table
 	int				time_to_sleep;
 	int				stop;
 	int				max_meal;
-	sem_t			sem_alive;
-	sem_t			full;
-	sem_t			sem_write;
+	sem_t			sem_done;
 	unsigned long	start;
 }				t_table;
 
@@ -42,6 +40,7 @@ typedef struct s_philo
 	sem_t			sem_wait;
 	unsigned long	last_meal;
 	sem_t			sem_dish;
+	sem_t			sem_write;
 	int				dish_eaten;
 	t_table			*table;
 }				t_philo;
