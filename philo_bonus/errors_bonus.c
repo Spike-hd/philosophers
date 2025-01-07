@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo_bonus.h"
 
 int	error_handle(char *error_msg)
 {
@@ -36,31 +36,36 @@ int	is_init_correct(t_table *table)
 	return (1);
 }
 
-int	clear_all(t_philo **philo)
+void	close_table_sem(t_table *table)
 {
-	int		i;
-	t_table	*table;
-
-	if (!philo || !(*philo))
-		return (0);
-	table = (*philo)[0].table;
-	if (table->chopsticks)
-	{
-		i = 0;
-		while (i < table->nb_philo)
-			pthread_mutex_destroy(&table->chopsticks[i++]);
-		free(table->chopsticks);
-	}
-	pthread_mutex_destroy(&table->mtx_alive);
-	pthread_mutex_destroy(&table->mtx_writing);
-	i = -1;
-	while (++i < table->nb_philo)
-	{
-		pthread_mutex_destroy(&(*philo)[i].mtx_waiting);
-		pthread_mutex_destroy(&(*philo)[i].mtx_dish);
-
-	}
-	free(*philo);
-	return (0);
+	if (table->nb_pid)
+		free (table->nb_pid);
+	if (table->sem_forks != SEM_FAILED)
+		sem_close(table->sem_forks);
+	if (table->sem_done != SEM_FAILED)
+		sem_close(table->sem_done);
+	sem_unlink("/forks");
+	sem_unlink("/done");
 }
 
+void	close_philo_sem(t_philo *philo)
+{
+	if (philo->sem_wait != SEM_FAILED)
+		sem_close(philo->sem_wait);
+	if (philo->sem_dish != SEM_FAILED)
+		sem_close(philo->sem_dish);
+	if (philo->sem_write != SEM_FAILED)
+		sem_close(philo->sem_write);
+	sem_unlink("/wait");
+	sem_unlink("/dish");
+	sem_unlink("/write");
+}
+
+void	clear_all(t_philo *philo)
+{
+	if (philo && philo->table)
+	{
+		close_table_sem(philo->table);
+		close_philo_sem(philo);
+	}
+}

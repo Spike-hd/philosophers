@@ -6,7 +6,7 @@
 /*   By: spike <spike@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 19:49:09 by spike             #+#    #+#             */
-/*   Updated: 2025/01/06 22:52:45 by spike            ###   ########.fr       */
+/*   Updated: 2025/01/07 10:04:09 by spike            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,14 @@ int	eating_routine(t_philo *philo, int max_dish)
 		print_think(philo);
 
 		// Philosophe commence à manger
-		if (sticks_lock(philo) == -1)
-			return (-1);
+		sem_wait(&philo->table->sem_forks);
+		sem_wait(&philo->table->sem_forks);
+		print_fork(philo);
 		init_waiting(philo);
 		print_eat(philo);
 		ft_usleep(philo->table->time_to_eat);
-		sticks_unlock(philo);
+		sem_post(&philo->table->sem_forks);
+		sem_post(&philo->table->sem_forks);
 		init_waiting(philo);
 
 		// Philosophe dort
@@ -58,6 +60,8 @@ void	start_simulation(t_philo *philo, int i)
 		max_dish = philo->dish_eaten + 1;
 	else
 		max_dish = philo->table->max_meal;
+	if (philo->name % 2 == 0)
+		ft_usleep(5); // pour ne pas avoir de deadlock
 	eating_routine(philo, max_dish);
 	return (NULL);
 }

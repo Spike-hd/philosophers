@@ -20,7 +20,6 @@ int	set_simulation(t_philo *philo, int nb_philo)
 
 	i = 0;
 	trigger = 0;
-	pid = fork();
 	while (i < nb_philo)
 	{
 		pid = fork();
@@ -43,10 +42,8 @@ int	set_simulation(t_philo *philo, int nb_philo)
 	while (++i < nb_philo)
 		kill(philo->table->nb_pid[i], SIGKILL);
 
-	close_all(philo);
-    return 0;
-}
 
+	return 0;
 }
 
 int	main(int ac, char **av)
@@ -62,7 +59,7 @@ int	main(int ac, char **av)
 		return (error_handle("problem with one of the argument\n"));
 	if (init_philo(philo, &table) == -1)
 		return (error_handle("problem with the allocation of philosophers\n"));
-	if (start_simulation(philo, table.nb_philo) == -1)
+	if (set_simulation(philo, table.nb_philo) == -1)
 		return (error_handle("problem with the simulation\n"));
 	clear_all(&philo);
 	return (0);
