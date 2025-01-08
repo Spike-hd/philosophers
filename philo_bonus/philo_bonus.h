@@ -50,7 +50,7 @@ typedef struct s_philo
 
 
 // --------------INIT------------------
-int		init_table(t_table *table, int ac, char **av, unsigned long start);
+int		init_table(t_table *table, int ac, char **av);
 int		init_philo(t_philo *philo, t_table *table);
 void	init_waiting(t_philo *philo);
 int		ft_atoi(const char *str);

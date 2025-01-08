@@ -36,7 +36,6 @@ int	eating_routine(t_philo *philo, int max_dish)
 		// Philosophe commence à manger
 		if (sticks_lock(philo) == -1)
 				return (-1);
-		init_waiting(philo);
 		print_eat(philo);
 		ft_usleep(philo->table->time_to_eat);
 		sticks_unlock(philo);
