@@ -6,7 +6,7 @@
 /*   By: spike <spike@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:12:50 by spike             #+#    #+#             */
-/*   Updated: 2025/01/08 17:07:26 by spike            ###   ########.fr       */
+/*   Updated: 2025/01/09 17:29:35 by spike            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	check_death(t_philo *philo)
 	unsigned long	start;
 
 	time_now = calculate_time();
-	sem_wait(philo->sem_dish);
+	sem_wait(philo->sem_wait);
 	last_meal = philo->last_meal;
-	sem_post(philo->sem_dish);
+	sem_post(philo->sem_wait);
 
 	if (time_now - last_meal > (unsigned long)philo->table->time_to_die)
 	{
