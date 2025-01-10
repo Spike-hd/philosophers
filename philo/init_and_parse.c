@@ -49,7 +49,6 @@ int	init_table_resources(t_table *table)
 	table->chopsticks = malloc(table->nb_philo * sizeof(pthread_mutex_t));
 	if (!table->chopsticks)
 		return (-1);
-
 	i = 0;
 	while (i < table->nb_philo)
 	{
@@ -72,7 +71,6 @@ int	init_table(t_table *table, int ac, char **av, unsigned long start)
 		return (-1);
 	return (0);
 }
-
 
 int	init_philo(t_philo **philo, t_table *table)
 {

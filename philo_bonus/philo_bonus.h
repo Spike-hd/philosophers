@@ -47,31 +47,25 @@ typedef struct s_philo
 	int				dish_eaten;
 	t_table			*table;
 }				t_philo;
-
-
 // --------------INIT------------------
-int		init_table(t_table *table, int ac, char **av);
-int		init_philo(t_philo *philo, t_table *table);
-void	init_waiting(t_philo *philo);
-int		ft_atoi(const char *str);
-
+int				init_table(t_table *table, int ac, char **av);
+int				init_philo(t_philo *philo, t_table *table);
+void			init_waiting(t_philo *philo);
+int				ft_atoi(const char *str);
 // --------------ERROR------------------
-int		error_handle(char *error_msg);
-int		is_init_correct(t_table *table);
-void	close_table_sem(t_table *table);
-void	close_philo_sem(t_philo *philo);
-void	clear_all(t_philo *philo);
-
+int				error_handle(char *error_msg);
+int				is_init_correct(t_table *table);
+void			close_table_sem(t_table *table);
+void			close_philo_sem(t_philo *philo);
+void			clear_all(t_philo *philo);
 // --------------SIMULATION------------------
-int		start_simulation(t_philo *philo, int i);
-void	*monitoring(void *arg);
-
+int				start_simulation(t_philo *philo, int i);
+void			*monitoring(void *arg);
 // -----------PRINT-------------
-void	print_think(t_philo *philo);
-void	print_fork(t_philo *philo);
-void	print_eat(t_philo *philo);
-void	print_sleep(t_philo *philo);
-
+void			print_think(t_philo *philo);
+void			print_fork(t_philo *philo);
+void			print_eat(t_philo *philo);
+void			print_sleep(t_philo *philo);
 // -----------TIME-------------
 unsigned long	calculate_time(void);
 void			init_waiting(t_philo *philo);

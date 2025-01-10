@@ -58,9 +58,7 @@ int	clear_all(t_philo **philo)
 	{
 		pthread_mutex_destroy(&(*philo)[i].mtx_waiting);
 		pthread_mutex_destroy(&(*philo)[i].mtx_dish);
-
 	}
 	free(*philo);
 	return (0);
 }
-

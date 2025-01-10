@@ -52,7 +52,8 @@ void	print_fork(t_philo *philo)
 	{
 		printf("%ld Philo %d has taken a fork\n", time - start, philo->name);
 		if (philo->table->nb_philo > 1)
-			printf("%ld Philo %d has taken a fork\n", time - start, philo->name);
+			printf("%ld Philo %d has taken a fork\n", time - start,
+				philo->name);
 	}
 	pthread_mutex_unlock(&philo->table->mtx_alive);
 	pthread_mutex_unlock(&philo->table->mtx_writing);

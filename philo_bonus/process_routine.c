@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_routine.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spike <spike@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hduflos <hduflos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 19:49:09 by spike             #+#    #+#             */
-/*   Updated: 2025/01/08 17:32:07 by spike            ###   ########.fr       */
+/*   Updated: 2025/01/10 11:12:08 by hduflos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,7 @@ int	eating_routine(t_philo *philo, int max_dish)
 {
 	while (philo->dish_eaten < max_dish)
 	{
-		// Philosophe commence à réfléchir
 		print_think(philo);
-
-		// Philosophe commence à manger
 		sem_wait(philo->table->sem_forks);
 		print_fork(philo);
 		sem_wait(philo->table->sem_forks);
@@ -29,11 +26,8 @@ int	eating_routine(t_philo *philo, int max_dish)
 		sem_post(philo->table->sem_forks);
 		sem_post(philo->table->sem_forks);
 		init_waiting(philo);
-
-		// Philosophe dort
 		print_sleep(philo);
 		ft_usleep(philo->table->time_to_sleep);
-
 		sem_wait(philo->sem_dish);
 		if (philo->table->stop == 1)
 			philo->dish_eaten++;

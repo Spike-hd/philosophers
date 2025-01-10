@@ -44,7 +44,6 @@ void	join_all_threads(pthread_t checker, pthread_t *threads, int nb_philo)
 
 	if (pthread_join(checker, NULL) != 0)
 		error_handle("Error during pthread_join for monitoring thread\n");
-
 	i = 0;
 	while (i < nb_philo)
 	{

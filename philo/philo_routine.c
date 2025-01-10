@@ -28,23 +28,17 @@ int	eating_routine(t_philo *philo, int max_dish)
 {
 	while (philo->dish_eaten < max_dish)
 	{
-		// Philosophe commence à réfléchir
 		if (is_everyone_alive(philo) == 0)
 			return (-1);
 		print_think(philo);
-
-		// Philosophe commence à manger
 		if (sticks_lock(philo) == -1)
-				return (-1);
+			return (-1);
 		print_eat(philo);
 		ft_usleep(philo->table->time_to_eat);
 		sticks_unlock(philo);
 		init_waiting(philo);
-
-		// Philosophe dort
 		print_sleep(philo);
 		ft_usleep(philo->table->time_to_sleep);
-
 		pthread_mutex_lock(&philo->mtx_dish);
 		if (philo->table->stop == 1)
 			philo->dish_eaten++;

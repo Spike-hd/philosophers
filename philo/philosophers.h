@@ -44,46 +44,35 @@ typedef struct s_philo
 	int				dish_eaten;
 	t_table			*table;
 }				t_philo;
-
-
 //---------INIT----------------
-int		init_table(t_table *table, int ac, char **av, unsigned long start);
-int		init_philo(t_philo **philo, t_table *table);
-
+int				init_table(t_table *table, int ac, char **av,
+					unsigned long start);
+int				init_philo(t_philo **philo, t_table *table);
 // --------ERROR---------------
-int		error_handle(char *error_msg);
-int		is_init_correct(t_table *table);
-int		clear_all(t_philo **philo);
-
+int				error_handle(char *error_msg);
+int				is_init_correct(t_table *table);
+int				clear_all(t_philo **philo);
 // --------UTILS---------------
-int		ft_atoi(const char *str);
-
+int				ft_atoi(const char *str);
 // ---------THREAD------------
-int		itadakimasu(t_philo **philo);
-void	*monitoring(void *arg);
-int		is_everyone_full(t_philo **philo, int nb_philo);
-void	*eating(void *args);
-int	is_everyone_alive(t_philo *philo);
-
+int				itadakimasu(t_philo **philo);
+void			*monitoring(void *arg);
+int				is_everyone_full(t_philo **philo, int nb_philo);
+void			*eating(void *args);
+int				is_everyone_alive(t_philo *philo);
 // -----------TIME-------------
 unsigned long	calculate_time(void);
 void			init_waiting(t_philo *philo);
 int				check_death(t_philo *philo);
-void	ft_usleep(unsigned long time_in_ms);
-
+void			ft_usleep(unsigned long time_in_ms);
 // ---------LOCK-UNLOCK--------
-int	sticks_lock(t_philo *philo);
-void	sticks_unlock(t_philo *philo);
-
+int				sticks_lock(t_philo *philo);
+void			sticks_unlock(t_philo *philo);
 // -----------PRINT-------------
-void	print_death(t_philo *philo);
-void	print_think(t_philo *philo);
-void	print_fork(t_philo *philo);
-void	print_eat(t_philo *philo);
-void	print_sleep(t_philo *philo);
-
-
-
-int	test_waiting(t_philo *philo); // DEL
+void			print_death(t_philo *philo);
+void			print_think(t_philo *philo);
+void			print_fork(t_philo *philo);
+void			print_eat(t_philo *philo);
+void			print_sleep(t_philo *philo);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hduflos <hduflos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:07:31 by spike             #+#    #+#             */
-/*   Updated: 2025/01/04 17:07:48 by marvin           ###   ########.fr       */
+/*   Updated: 2025/01/10 11:05:30 by hduflos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,25 @@
 
 int	check_death(t_philo *philo)
 {
-	unsigned long	time_now;
-	unsigned long	time_last_meal;
+	unsigned long	now;
+	unsigned long	last_meal;
 
-	time_now = calculate_time();
+	now = calculate_time();
 	pthread_mutex_lock(&philo->mtx_waiting);
-	time_last_meal = philo->waiting;
+	last_meal = philo->waiting;
 	pthread_mutex_unlock(&philo->mtx_waiting);
 	if (philo->table->stop == 1)
 	{
-		if ((time_now - time_last_meal > (unsigned long)philo->table->time_to_die
-			&& philo->dish_eaten < philo->table->max_meal)
-		|| philo->table->alive == 0)
-		return (1);
+		if ((now - last_meal > (unsigned long)philo->table->time_to_die
+				&& philo->dish_eaten < philo->table->max_meal)
+			|| philo->table->alive == 0)
+			return (1);
 	}
 	else
 	{
-	if ((time_now - time_last_meal > (unsigned long)philo->table->time_to_die)
-		|| philo->table->alive == 0)
-		return (1);
+		if ((now - last_meal > (unsigned long)philo->table->time_to_die)
+			|| philo->table->alive == 0)
+			return (1);
 	}
 	return (0);
 }
